@@ -1,5 +1,4 @@
 import time
-import re
 import numpy as np
 
 def parse_input(file):
@@ -50,7 +49,7 @@ def calculate_score(board, num):
     unmarked_sum = 0
     for row in board:
         for col in row:
-            if col[1] == False: # only sum numbers that are not marked
+            if col[1] == False: # only sum the numbers that are not marked
                 unmarked_sum += col[0]
 
     return unmarked_sum * num
@@ -70,7 +69,23 @@ def solution_1():
 
 
 def solution_2():
-    pass
+    with open('input.txt') as file:
+        nums, boards = parse_input(file)
+
+        board_count = boards.shape[0]
+        bingo_count = 0
+
+        for num in nums:
+            for board in boards:
+                # only check for bingo if board doesn't have one already
+                bingo = check_for_bingo(board)
+                if not bingo:
+                    mark_board(board, num)
+                    bingo = check_for_bingo(board)
+                    if bingo:
+                        bingo_count += 1
+                        if bingo_count == board_count: # last board to get a bingo
+                            return calculate_score(board, num)
 
 
 def main():
